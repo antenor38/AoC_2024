@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <Reader.hpp>
+#include "XmasParser.hpp"
 
 
 int main(int argc, char *argv[])
@@ -15,12 +16,9 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    Reader reader(filename);
+    XmasParser parser(filename);
 
-    auto lines = reader.readLines();
-
-
-    std::cout << "Result: " << "0" << std::endl;
+    std::cout << "Result: " << parser.countWords() << std::endl;
 
     return 0;
 }
