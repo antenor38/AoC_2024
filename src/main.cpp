@@ -1,14 +1,14 @@
 #include <iostream>
 #include <memory>
 #include <Reader.hpp>
-#include "XmasParser.hpp"
+#include "GardenPlots_12.hpp"
 
 
 int main(int argc, char *argv[])
 {
     if(argc != 2)
     {
-        std::cout << "Expected filename of input data!\n";
+        std::cerr << "Expected filename of input data!\n";
         return -1;
     }
 
@@ -16,9 +16,11 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    XmasParser parser(filename);
+    GardenPlots plots(filename);
 
-    std::cout << "Result: " << parser.countWords() << std::endl;
+    plots.parseField();
+
+    std::cout << "Result: " << plots.totalFencePrice() << std::endl;
 
     return 0;
 }
