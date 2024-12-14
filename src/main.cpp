@@ -1,7 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <Reader.hpp>
-#include "XmasParser.hpp"
+#include "RobotPath_14.hpp"
 
 
 int main(int argc, char *argv[])
@@ -16,9 +16,10 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    XmasParser parser(filename);
+    RobotPath robotPath(filename);
+    robotPath.parseData();
 
-    std::cout << "Result: " << parser.countWords() << std::endl;
+    std::cout << "Result: " << robotPath.calculateSafetyFactor() << std::endl;
 
     return 0;
 }
