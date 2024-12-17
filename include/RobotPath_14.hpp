@@ -36,12 +36,12 @@ private:
     size_t detectQuadrant(coordinate pos);
 
     std::vector<std::unique_ptr<Robot>> mRobots;
-    std::vector<std::map<coordinate, uint16_t>> mRobotsOnFloor;
+    std::vector<std::map<coordinate, uint32_t>> mRobotsOnFloor;
 
     std::vector<std::string> mFileLines;
     std::unique_ptr<Reader> mReader;
 
-    uint16_t const kWidthX = 11;
-    uint16_t const kHeightY = 7;
+    uint16_t const kWidthX = 101;
+    uint16_t const kHeightY = 103;
     bool mAvoidX, mAvoidY;
 };

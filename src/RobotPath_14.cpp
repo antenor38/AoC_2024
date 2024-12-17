@@ -6,7 +6,6 @@ Robot::Robot(uint16_t const x, uint16_t const y, int16_t const xSpeed, int16_t c
   , mPosition(x,y)
   , mVelocity(xSpeed, ySpeed)
 {
-    std::cout << "Creating robot with p(" << mPosition.first << "," << mPosition.second << "), v(" << mVelocity.first << "," << mVelocity.second << ")\n";
 }
 
 coordinate Robot::calculatePosition(uint16_t const steps)
@@ -17,6 +16,15 @@ coordinate Robot::calculatePosition(uint16_t const steps)
     }
     else if(0 > mVelocity.first)
     {
+        uint16_t tempSteps = steps;
+        int16_t move = (mVelocity.first * steps) % mWidthX;
+
+        if(mPosition.first < (move * -1))
+        {
+            move += mPosition.first;
+            mPosition.first = mWidthX;
+        }
+        mPosition.first += move;
 
     }
     if(0 < mVelocity.second)
@@ -25,7 +33,15 @@ coordinate Robot::calculatePosition(uint16_t const steps)
     }
     else if(0 > mVelocity.second)
     {
+        uint16_t tempSteps = steps;
+        int16_t move = (mVelocity.second * steps) % mHeightY;
 
+        if(mPosition.second < (move * -1))
+        {
+            move += mPosition.second;
+            mPosition.second = mHeightY;
+        }
+        mPosition.second += move;
     }
 
     return mPosition;
@@ -36,7 +52,7 @@ RobotPath::RobotPath(std::string filename)
   , mAvoidX(false)
   , mAvoidY(false)
 {
-    mRobotsOnFloor.reserve(4);
+    mRobotsOnFloor.resize(4);
     mFileLines = mReader->readLines();
     if(kWidthX % 2 == 1)
     {
@@ -65,8 +81,6 @@ void RobotPath::parseData()
 
         mRobots.push_back(std::make_unique<Robot>(x, y, xSpeed, ySpeed, kWidthX, kHeightY));
     }
-
-    std::cout << "Robots num: " << mRobots.size() << std::endl;
 }
 
 size_t RobotPath::detectQuadrant(coordinate pos)
@@ -101,7 +115,7 @@ uint32_t RobotPath::calculateSafetyFactor()
 {
     for(auto& robot : mRobots)
     {
-        auto pos = robot->calculatePosition();
+        auto pos = robot->calculatePosition(100);
         size_t quadrant = detectQuadrant(pos);
         if(5 > quadrant)
         {
@@ -117,8 +131,7 @@ uint32_t RobotPath::calculateSafetyFactor()
 
         for(auto& elem : quadrant)
         {
-            sum += static_cast<uint32_t>(elem.second);
-            std::cout << "Quadrant robots: " << elem.second << std::endl; 
+            sum += elem.second;
         }
         sumAll *= sum;
     }
