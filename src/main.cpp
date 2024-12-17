@@ -2,6 +2,7 @@
 #include <memory>
 #include <Reader.hpp>
 #include "GardenPlots_12.hpp"
+#include "RobotPath_14.hpp"
 
 
 int main(int argc, char *argv[])
@@ -16,11 +17,10 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    GardenPlots plots(filename);
+    RobotPath robotPath(filename);
+    robotPath.parseData();
 
-    plots.parseField();
-
-    std::cout << "Result: " << plots.totalFencePrice() << std::endl;
+    std::cout << "Result: " << robotPath.calculateSafetyFactor() << std::endl;
 
     return 0;
 }
