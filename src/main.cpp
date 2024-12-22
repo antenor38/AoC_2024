@@ -3,6 +3,7 @@
 #include <Reader.hpp>
 #include "GardenPlots_12.hpp"
 #include "RobotPath_14.hpp"
+#include "MonkeyMarket_22.hpp"
 
 
 int main(int argc, char *argv[])
@@ -17,10 +18,10 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    RobotPath robotPath(filename);
-    robotPath.parseData();
+    MonkeyMarket market(filename);
+    market.parseData();
 
-    std::cout << "Result: " << robotPath.calculateSafetyFactor() << std::endl;
+    std::cout << "Result: " << market.calculateBestPriceBySequence() << std::endl;
 
     return 0;
 }
