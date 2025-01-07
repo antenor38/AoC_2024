@@ -2,7 +2,7 @@
 #include <memory>
 #include <Reader.hpp>
 #include "GardenPlots_12.hpp"
-#include "RobotPath_14.hpp"
+#include "MemoryRun_18.hpp"
 
 
 int main(int argc, char *argv[])
@@ -17,10 +17,12 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    RobotPath robotPath(filename);
-    robotPath.parseData();
+    MemoryRun memRun(filename);
+    memRun.parseData();
 
-    std::cout << "Result: " << robotPath.calculateSafetyFactor() << std::endl;
+    std::cout << "Result: " << memRun.traverseMemoryPath(1024) << std::endl;
+
+    std::cout << "Critical byte : (" << memRun.getCriticalByte().first << "," << memRun.getCriticalByte().second << ")\n";
 
     return 0;
 }

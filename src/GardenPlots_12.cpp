@@ -5,6 +5,7 @@ Plot::Plot(char const plantType)
   , mArea(0)
   , mPerimeter(0)
   , mSides(0)
+  , mBorderCoordinate(nullptr)
 {
 
 }
@@ -101,6 +102,48 @@ uint32_t Plot::fencePrice(bool bulkVersion)
     return static_cast<uint32_t>(mArea) * static_cast<uint32_t>(mPerimeter);
 }
 
+BorderCoordinate* Plot::getLastBorderElem()
+{
+    BorderCoordinate* temp = mBorderCoordinate;
+    while(nullptr != temp)
+    {
+        temp = temp->next;
+    }
+    return temp;
+}
+
+void Plot::addBorderElem(BorderCoordinate* borCoor)
+{
+    if(nullptr == mBorderCoordinate)
+    {
+        mBorderCoordinate = borCoor;
+    }
+    else
+    {
+        if(mBorderCoordinate->pos.first == borCoor->pos.first && mBorderCoordinate->pos.second == borCoor->pos.second)
+        {
+            return;
+        }
+        auto* lastElem = getLastBorderElem();
+        lastElem->next = borCoor;
+    }
+}
+
+void Plot::deleteBorderElems()
+{
+    if(nullptr != mBorderCoordinate)
+    {
+        auto* temp = mBorderCoordinate;
+        while(nullptr != temp->next)
+        {
+            auto* secondTemp = temp->next;
+            delete temp;
+            temp = secondTemp;
+        }
+        delete temp;
+    }
+}
+
 
 GardenPlots::GardenPlots(std::string const filename)
   : mReader(std::make_unique<Reader>(filename))
@@ -117,6 +160,7 @@ void GardenPlots::parseField()
         std::string const line = mFileLines.at(y);
         for(uint16_t x = 0; x < mLengthX; x++)
         {
+            BorderCoordinate* borCoor = new BorderCoordinate();
             std::vector<coordinate> sideCoordinates;
             // std::set<coordinate> sideYCoordinates;
             char const c = line.at(x);
@@ -126,11 +170,13 @@ void GardenPlots::parseField()
             if((((x + 1) < mLengthX) && (c != line.at(x+1))) || ((x + 1) == mLengthX))
             {
                 perimeter++;
+                borCoor->right = true;
                 // sideCoordinates.push_back(coordinate(x,y));
             }
             if((((y + 1) < mLengthY) && (c != mFileLines.at(y+1).at(x))) || ((y + 1) == mLengthY))
             {
                 perimeter++;
+                borCoor->down = true;
                 // sideCoordinates.push_back(coordinate(x,y));
             }
             if(0 != x)
@@ -149,12 +195,14 @@ void GardenPlots::parseField()
                 else
                 {
                     perimeter++;
+                    borCoor->left = true;
                     // sideCoordinates.push_back(coordinate(x,y));
                 }
             }
             else
             {
                 perimeter++;
+                borCoor->left = true;
                 // sideCoordinates.push_back(coordinate(x,y));
             }
             if(0 != y)
@@ -191,12 +239,14 @@ void GardenPlots::parseField()
                 else
                 {
                     perimeter++;
+                    borCoor->up = true;
                     // sideCoordinates.push_back(coordinate(x,y));
                 }
             }
             else
             {
                 perimeter++;
+                borCoor->up = true;
                 // sideCoordinates.push_back(coordinate(x,y));
             }
 
@@ -207,6 +257,9 @@ void GardenPlots::parseField()
             plot->addPlant(perimeter);
             if(0 != perimeter)
             {
+                borCoor->pos = coordinate(x,y);
+                auto* previousBorCoor = plot->getLastBorderElem();
+
                 plot->addCoordinate(coordinate(x,y));
             }
             mPlotsList.insert(plot);

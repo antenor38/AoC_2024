@@ -8,10 +8,25 @@
 
 typedef std::pair<uint16_t, uint16_t> coordinate;
 
+struct BorderCoordinate
+{
+    coordinate pos;
+    bool left = false;
+    bool up = false;
+    bool right = false;
+    bool down = false;
+
+    BorderCoordinate* next = nullptr;
+};
+
 class Plot
 {
 public:
     Plot(char const plantType);
+    ~Plot()
+    {
+        deleteBorderElems();
+    }
 
     char getPlantType() const {return mPlantType;}
 
@@ -24,6 +39,10 @@ public:
     uint16_t calculateSides();
 
     uint32_t fencePrice(bool bulkVersion = false);
+
+    BorderCoordinate* getLastBorderElem();
+    void addBorderElem(BorderCoordinate* borCoor);
+    void deleteBorderElems();
 
 private:
 
@@ -45,6 +64,7 @@ private:
     uint16_t mSides;
 
     std::vector<coordinate> mSideCoordinates; 
+    BorderCoordinate* mBorderCoordinate;
 };
 
 class GardenPlots
