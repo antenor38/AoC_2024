@@ -3,6 +3,8 @@
 #include <Reader.hpp>
 #include "GardenPlots_12.hpp"
 #include "MemoryRun_18.hpp"
+#include "RobotPath_14.hpp"
+#include "MonkeyMarket_22.hpp"
 
 
 int main(int argc, char *argv[])
@@ -17,12 +19,10 @@ int main(int argc, char *argv[])
 
     std::string filename = "../config/" + inputName;
 
-    MemoryRun memRun(filename);
-    memRun.parseData();
+    MonkeyMarket market(filename);
+    market.parseData();
 
-    std::cout << "Result: " << memRun.traverseMemoryPath(1024) << std::endl;
-
-    std::cout << "Critical byte : (" << memRun.getCriticalByte().first << "," << memRun.getCriticalByte().second << ")\n";
+    std::cout << "Result: " << market.calculateBestPriceBySequence() << std::endl;
 
     return 0;
 }
