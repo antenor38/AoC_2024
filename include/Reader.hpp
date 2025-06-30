@@ -18,6 +18,8 @@ public:
 
     static uint64_t stringToNumber(std::string numStr);
 
+    bool parseUInt(std::string const& candidate, uint64_t& resultNum, char const delimiter = '\0');
+
     void changeFile(std::string filename);
 private:
 

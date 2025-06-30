@@ -70,6 +70,35 @@ uint64_t Reader::stringToNumber(std::string numStr)
     return number;
 }
 
+bool Reader::parseUInt(std::string const& candidate, uint64_t& resultNum, char const delimiter)
+{
+    bool success = false;
+
+    std::string strNum = "";
+
+    for(auto c : candidate)
+    {
+        if(delimiter == c)
+        {
+            break;
+        }
+        else if(0 == isdigit(c))
+        {
+            success = false;
+            break;
+        }
+        success = true;
+        strNum += c;
+    }
+
+    if(success)
+    {
+        resultNum = stringToNumber(strNum);
+    }
+
+    return success;
+}
+
 void Reader::changeFile(std::string filename)
 {
     mFilename = filename;
